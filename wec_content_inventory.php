@@ -15,3 +15,10 @@ function wec_inventory_admin_actions() {
     add_management_page("WP Content Inventory", "WP Content Inventory", 1, "WP Content Inventory", "wec_inventory_admin");
 }
 add_action('admin_menu', 'wec_inventory_admin_actions');
+
+/**
+* Add Link To Tool Menu
+*/
+function wec_inventory_admin() {
+    include('wec_content_inventory_admin.php');
+}
