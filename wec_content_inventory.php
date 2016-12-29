@@ -17,8 +17,50 @@ function wec_inventory_admin_actions() {
 add_action('admin_menu', 'wec_inventory_admin_actions');
 
 /**
-* Add Link To Tool Menu
+* Create Admin Page
 */
 function wec_inventory_admin() {
     include('wec_content_inventory_admin.php');
+}
+
+/**
+* List Post Types
+*/
+function wec_inventory_get_custom_posttypes() {
+
+    $args = array(
+       'public'   => true,
+       '_builtin' => false
+    );
+
+    $output = 'names'; // names or objects, note names is the default
+    $operator = 'and'; // 'and' or 'or'
+
+    $post_types = get_post_types( $args, $output, $operator );
+
+    foreach ( $post_types  as $post_type ) {
+
+       echo '<p>' . $post_type . '</p>';
+    }
+
+}
+
+
+function wec_inventory_get_stock_posttypes() {
+
+    $args = array(
+       'public'   => true,
+       '_builtin' => true
+    );
+
+    $output = 'names'; // names or objects, note names is the default
+    $operator = 'and'; // 'and' or 'or'
+
+    $post_types = get_post_types( $args, $output, $operator );
+
+    foreach ( $post_types  as $post_type ) {
+
+       echo '<p>' . $post_type . '</p>';
+    }
+
 }
