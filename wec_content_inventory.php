@@ -462,11 +462,21 @@ function wecinv_list_posts_hierarchically($wecinv_post_type) {
 
 }
 
+
 /**
- * Create Table Of Posts In Hierarchical Order
+ * Create Metabox on Tracked Post Types
  */
 function wecinv_metabox() {
-   add_meta_box('wecinv_meta_box', 'WP Content Inventory', 'wecinv_mentox_content', 'page', 'advanced', 'high');
+
+    //Add Metabox Option To All Post Types
+    $args = array(
+       'public'   => true
+    );
+
+    $post_types = get_post_types( $args );
+
+    add_meta_box('wecinv_meta_box', 'WP Content Inventory', 'wecinv_mentox_content', $post_types, 'advanced', 'high');
+
 }
 add_action('admin_menu', 'wecinv_metabox');
 
@@ -476,29 +486,37 @@ function wecinv_mentox_content() {
 
     $post_id = $post->ID;
 
-    //Cross Content Data
-    $track_status = get_post_meta( $post->ID, 'content_approval', true );
+    $post_type = get_post_type( $post_id );
 
-    echo '<h2>Content Approval Status ';
-    echo '<select name="content_approval" id="content_approval">';
+    if ( get_option('wecinv_track_'.$post_type) == '10' ) {
 
-        echo '<option value="Not Approved" ';
-        if ( $track_status == 'Not Approved') { echo 'selected'; }
-        echo '>Not Approved</option>';
+        //Cross Content Data
+        $track_status = get_post_meta( $post->ID, 'content_approval', true );
 
-        echo '<option value="In Progress" ';
-        if ( $track_status == 'In Progress') { echo 'selected'; }
-        echo '>In Progress</option>';
+        echo '<h2>Content Approval Status ';
+        echo '<select name="content_approval" id="content_approval">';
 
-        echo '<option value="Approved" ';
-        if ( $track_status == 'Approved') { echo 'selected'; }
-        echo '>Approved</option>';
+            echo '<option value="Not Approved" ';
+            if ( $track_status == 'Not Approved') { echo 'selected'; }
+            echo '>Not Approved</option>';
 
-    echo '</select></h2>';
+            echo '<option value="In Progress" ';
+            if ( $track_status == 'In Progress') { echo 'selected'; }
+            echo '>In Progress</option>';
+
+            echo '<option value="Approved" ';
+            if ( $track_status == 'Approved') { echo 'selected'; }
+            echo '>Approved</option>';
+
+        echo '</select></h2>';
+
+    }
 
 }
 
-// Save data from meta box
+/**
+ * Save data from meta box
+ */
 function wecinv_save_status($post_id) {
     /* in production code, $slug should be set only once in the plugin,
        preferably as a class property, rather than in each function that needs it.
