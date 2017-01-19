@@ -47,9 +47,7 @@ function wecinv_list_posts_by_date($wecinv_post_type) {
 
         $count = $the_query->post_count;
 
-        echo '<h2 id="posts-inventory" class="open-close">Posts: '.$count.'</h2>';
-
-        echo '<table class="posts-inventory inventory-table">';
+        echo '<table class="'.$wecinv_post_type.'-inventory inventory-table">';
 
             echo '<tr style="background-color:#c2c2c2">';
 
@@ -151,9 +149,7 @@ function wecinv_list_posts_hierarchically($wecinv_post_type) {
         )
     );
 
-    echo '<h2 id="location-inventory" class="open-close">Location Inventory</h2>';
-
-    echo '<table class="location-inventory inventory-table">';
+    echo '<table class="'.$wecinv_post_type.'inventory inventory-table">';
 
         echo '<tr style="background-color:#c2c2c2">';
 

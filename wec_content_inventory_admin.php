@@ -132,7 +132,7 @@ echo '<style>';
     echo '.inventory-table { width:95%; box-sizing:border-box; }';
 echo '</style>';
 
-echo '<h3>Content Inventory</h3>';
+echo '<h2>Content Inventory</h2>';
 
 $args = array(
    'public'   => true
@@ -149,7 +149,7 @@ foreach ( $post_types as $post_type ) {
 
     if ($track_option=='10') {
 
-        echo '<h4>'.$post_type->label.'</h4>';
+        echo '<h3>'.$post_type->label.'</h3>';
 
         if ($post_type->hierarchical) {
 
