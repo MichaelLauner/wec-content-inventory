@@ -62,6 +62,12 @@ if($_POST['wecinv_hidden'] == 'Y') {
 
               <!-- Plugin Reports -->
 
+              <?php
+
+                wecinv_dashboard_stats();
+
+              ?>
+
               <div id="accordion">
 
                   <?php

@@ -26,6 +26,37 @@ function wec_inventory_admin() {
     include('wec_content_inventory_admin.php');
 }
 
+/**
+ * Tracked Post Types Array
+ */
+function wecinv_tracked_posttypes() {
+
+    $args = array(
+       'public'   => true
+    );
+
+    $output = 'objects'; // names or objects, note names is the default
+    $operator = 'and'; // 'and' or 'or'
+
+    $post_types = get_post_types( $args, $output, $operator );
+
+    $tracked_posttypes = array();
+
+    foreach ( $post_types as $post_type ) {
+
+        $track_option = get_option('wecinv_track_'.$post_type->name);
+
+        if ($track_option=='10') {
+
+            $tracked_posttypes[] = $post_type->name;
+
+        }
+
+    }
+
+    return $tracked_posttypes;
+
+}
 
 /**
  * Create Table Of Posts Ordered By Date
@@ -471,7 +502,7 @@ function wecinv_list_all_unapproved() {
         array(
             'posts_per_page'    => -1,
             'order'             => 'ASC',
-            'post_type'         => array( 'page', 'post', 'crmc-location', 'crmc-service-area', 'crmc-physician', 'landing-page', 'crmc-testimonial', 'crmc-executive-bios' ),
+            'post_type'         => wecinv_tracked_posttypes(),
             'meta_query'        => array(
                 'relation' => 'OR',
                 array(
@@ -583,6 +614,47 @@ function wecinv_list_all_unapproved() {
     } else {
     	// no posts found
     }
+}
+
+
+/**
+ * Dashboard Stats
+ */
+function wecinv_dashboard_stats() {
+
+    $total_page_count = get_posts(
+        array(
+            'sort_column'   => 'menu_order',
+            'sort_order'    => 'desc',
+            'post_type'     => wecinv_tracked_posttypes(),
+            'posts_per_page'=> -1
+        )
+    );
+
+    $completed_page_count = get_posts(
+        array(
+            'sort_column'   => 'menu_order',
+            'sort_order'    => 'desc',
+            'post_type'     => wecinv_tracked_posttypes(),
+            'meta_key'      => 'content_approval',
+            'meta_value'    => 'Approved',
+            'posts_per_page'=> -1
+        )
+    );
+
+    echo '<div style="max-width:1440px; padding:20px; margin:0 auto;">';
+
+        echo '<h4>Total Page Count: '.count($total_page_count).'</h4>';
+
+        echo '<h4>Pages Finished: '.count($completed_page_count).'</h4>';
+
+        $percentage_complete = count($completed_page_count) / count($total_page_count);
+        $percent_friendly = number_format( $percentage_complete * 100, 2 ) . '%';
+
+        echo '<h4>Percentage Complete: '.$percent_friendly.'</h4>';
+
+    echo '</div>';
+
 }
 
 /**
