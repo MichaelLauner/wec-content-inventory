@@ -58,6 +58,8 @@ if($_POST['wecinv_hidden'] == 'Y') {
 
               <?php
 
+              wecinv_list_all_unapproved();
+
               $args = array(
                  'public'   => true
               );
