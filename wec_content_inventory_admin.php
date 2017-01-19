@@ -128,6 +128,10 @@ if($_POST['wecinv_hidden'] == 'Y') {
 
 <?php
 
+echo '<style>';
+    echo '.inventory-table { width:95%; box-sizing:border-box; }';
+echo '</style>';
+
 echo '<h3>Content Inventory</h3>';
 
 $args = array(
@@ -143,15 +147,19 @@ foreach ( $post_types as $post_type ) {
 
     $track_option = get_option('wecinv_track_'.$post_type->name);
 
-    echo '<h4>'.$post_type->label.'</h4>';
+    if ($track_option=='10') {
 
-    if ($post_type->hierarchical) {
+        echo '<h4>'.$post_type->label.'</h4>';
 
-        echo 'heirarchical post list';
+        if ($post_type->hierarchical) {
 
-    } else {
+            wecinv_list_posts_hierarchically($post_type->name);
 
-        wecinv_list_posts_by_date($post_type->name);
+        } else {
+
+            wecinv_list_posts_by_date($post_type->name);
+
+        }
 
     }
 
