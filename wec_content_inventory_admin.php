@@ -128,11 +128,10 @@ if($_POST['wecinv_hidden'] == 'Y') {
 
 <?php
 
-echo '<h3>Stock Post Types</h3>';
+echo '<h3>Content Inventory</h3>';
 
 $args = array(
-   'public'   => true,
-   '_builtin' => true
+   'public'   => true
 );
 
 $output = 'objects'; // names or objects, note names is the default
@@ -152,37 +151,7 @@ foreach ( $post_types as $post_type ) {
 
     } else {
 
-        echo 'post list by date';
-
-    }
-
-}
-
-echo '<h3>Custom Post Types</h3>';
-
-$args = array(
-   'public'   => true,
-   '_builtin' => false
-);
-
-$output = 'objects'; // names or objects, note names is the default
-$operator = 'and'; // 'and' or 'or'
-
-$post_types = get_post_types( $args, $output, $operator );
-
-foreach ( $post_types as $post_type ) {
-
-    $track_option = get_option('wecinv_track_'.$post_type->name);
-
-    echo '<h4>'.$post_type->label.'</h4>';
-
-    if ($post_type->hierarchical) {
-
-        echo 'heirarchical post list';
-
-    } else {
-
-        echo 'post list by date';
+        wecinv_list_posts_by_date($post_type->name);
 
     }
 
