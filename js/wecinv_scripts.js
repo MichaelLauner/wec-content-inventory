@@ -15,4 +15,11 @@ $(document).ready(function(){
 
 });
 
+$(window).load(function() {
+
+    $('.preloaded-content').fadeIn();
+    $('.preloader').fadeOut();
+
+});
+
 })( jQuery );

@@ -45,151 +45,126 @@ if($_POST['wecinv_hidden'] == 'Y') {
 
 <div class="wrap">
 
-    <div id="tabs">
-      <ul>
-        <li><a href="#tabs-1">Content Inventory</a></li>
-        <li><a href="#tabs-2">Plugin Settings</a></li>
-      </ul>
-      <div id="tabs-1">
+    <div class="preloader">
 
-          <!-- Plugin Reports -->
+    </div>
+
+    <div class="preloaded-content" style="display:none;">
+
+        <div id="tabs">
+
+          <ul>
+            <li><a href="#tabs-1">Content Inventory</a></li>
+            <li><a href="#tabs-2">Plugin Settings</a></li>
+          </ul>
+
+          <div id="tabs-1">
+
+              <!-- Plugin Reports -->
 
               <div id="accordion">
 
-              <?php
+                  <?php
+                  //Unapproved Table
+                  wecinv_list_all_unapproved();
 
-              wecinv_list_all_unapproved();
+                  //Post Type Tables
+                  wecinv_list_posttype();
+                  ?>
 
-              $args = array(
-                 'public'   => true
-              );
+              </div>
 
-              $output = 'objects'; // names or objects, note names is the default
-              $operator = 'and'; // 'and' or 'or'
+          </div>
+          <div id="tabs-2">
 
-              $post_types = get_post_types( $args, $output, $operator );
+              <!-- Plugin Settings -->
 
-              foreach ( $post_types as $post_type ) {
+              <form name="wecinv_form" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
 
-                  $track_option = get_option('wecinv_track_'.$post_type->name);
+                  <input type="hidden" name="wecinv_hidden" value="Y">
 
-                  if ($track_option=='10') {
+                  <?php
 
-                      echo '<h3>'.$post_type->label.'</h3>';
+                  echo '<h3>Stock Post Types Tracking Settings</h3>';
 
-                      echo '<div>';
+                  $args = array(
+                     'public'   => true,
+                     '_builtin' => true
+                  );
 
-                          if ($post_type->hierarchical) {
+                  $output = 'objects'; // names or objects, note names is the default
+                  $operator = 'and'; // 'and' or 'or'
 
-                              wecinv_list_posts_hierarchically($post_type->name);
+                  $post_types = get_post_types( $args, $output, $operator );
 
-                          } else {
+                  foreach ( $post_types as $post_type ) {
 
-                              wecinv_list_posts_by_date($post_type->name);
+                      $track_option = get_option('wecinv_track_'.$post_type->name);
 
-                          }
+                      echo '<p><strong>'.$post_type->label.': ';
 
-                      echo '</div>';
+                          echo '<select name="wecinv_track_'.$post_type->name.'">';
+
+                              echo '<option value="0" ';
+                              if ( $track_option == '0') { echo 'selected'; }
+                              echo '>Do Not Track</option>';
+
+                              echo '<option value="10" ';
+                              if ( $track_option == '10') { echo 'selected'; }
+                              echo '>Track </option>';
+
+                          echo '</select>';
+
+                      echo '</p>';
 
                   }
 
-              }
+                  echo '<h3>Custom Post Types Tracking Settings</h3>';
 
-              ?>
+                  $args = array(
+                     'public'   => true,
+                     '_builtin' => false
+                  );
+
+                  $output = 'objects'; // names or objects, note names is the default
+                  $operator = 'and'; // 'and' or 'or'
+
+                  $post_types = get_post_types( $args, $output, $operator );
+
+                  foreach ( $post_types as $post_type ) {
+
+                      $track_option = get_option('wecinv_track_'.$post_type->name);
+
+                      echo '<p><strong>'.$post_type->label.': ';
+
+                          echo '<select name="wecinv_track_'.$post_type->name.'">';
+
+                              echo '<option value="0" ';
+                              if ( $track_option == '0') { echo 'selected'; }
+                              echo '>Do Not Track</option>';
+
+                              echo '<option value="10" ';
+                              if ( $track_option == '10') { echo 'selected'; }
+                              echo '>Track </option>';
+
+                          echo '</select>';
+
+                      echo '</p>';
+
+                  }
+
+                  ?>
+
+                  <p class="submit">
+                      <input type="submit" name="Submit" value="<?php _e('Update Options', 'wecinv_trdom' ) ?>" />
+                  </p>
+
+              </form>
+
+          </div>
 
         </div>
 
-      </div>
-      <div id="tabs-2">
-
-          <!-- Plugin Settings -->
-
-          <form name="wecinv_form" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-
-              <input type="hidden" name="wecinv_hidden" value="Y">
-
-              <?php
-
-              echo '<h3>Stock Post Types Tracking Settings</h3>';
-
-              $args = array(
-                 'public'   => true,
-                 '_builtin' => true
-              );
-
-              $output = 'objects'; // names or objects, note names is the default
-              $operator = 'and'; // 'and' or 'or'
-
-              $post_types = get_post_types( $args, $output, $operator );
-
-              foreach ( $post_types as $post_type ) {
-
-                  $track_option = get_option('wecinv_track_'.$post_type->name);
-
-                  echo '<p><strong>'.$post_type->label.': ';
-
-                      echo '<select name="wecinv_track_'.$post_type->name.'">';
-
-                          echo '<option value="0" ';
-                          if ( $track_option == '0') { echo 'selected'; }
-                          echo '>Do Not Track</option>';
-
-                          echo '<option value="10" ';
-                          if ( $track_option == '10') { echo 'selected'; }
-                          echo '>Track </option>';
-
-                      echo '</select>';
-
-                  echo '</p>';
-
-              }
-
-              echo '<h3>Custom Post Types Tracking Settings</h3>';
-
-              $args = array(
-                 'public'   => true,
-                 '_builtin' => false
-              );
-
-              $output = 'objects'; // names or objects, note names is the default
-              $operator = 'and'; // 'and' or 'or'
-
-              $post_types = get_post_types( $args, $output, $operator );
-
-              foreach ( $post_types as $post_type ) {
-
-                  $track_option = get_option('wecinv_track_'.$post_type->name);
-
-                  echo '<p><strong>'.$post_type->label.': ';
-
-                      echo '<select name="wecinv_track_'.$post_type->name.'">';
-
-                          echo '<option value="0" ';
-                          if ( $track_option == '0') { echo 'selected'; }
-                          echo '>Do Not Track</option>';
-
-                          echo '<option value="10" ';
-                          if ( $track_option == '10') { echo 'selected'; }
-                          echo '>Track </option>';
-
-                      echo '</select>';
-
-                  echo '</p>';
-
-              }
-
-              ?>
-
-              <p class="submit">
-                  <input type="submit" name="Submit" value="<?php _e('Update Options', 'wecinv_trdom' ) ?>" />
-              </p>
-
-          </form>
-
-
-      </div>
     </div>
-
-
 
 </div>

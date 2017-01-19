@@ -585,6 +585,48 @@ function wecinv_list_all_unapproved() {
     }
 }
 
+/**
+ * Create Metabox on Tracked Post Types
+ */
+function wecinv_list_posttype() {
+
+    $args = array(
+       'public'   => true
+    );
+
+    $output = 'objects'; // names or objects, note names is the default
+    $operator = 'and'; // 'and' or 'or'
+
+    $post_types = get_post_types( $args, $output, $operator );
+
+    foreach ( $post_types as $post_type ) {
+
+        $track_option = get_option('wecinv_track_'.$post_type->name);
+
+        if ($track_option=='10') {
+
+            echo '<h3>'.$post_type->label.'</h3>';
+
+            echo '<div>';
+
+                if ($post_type->hierarchical) {
+
+                    wecinv_list_posts_hierarchically($post_type->name);
+
+                } else {
+
+                    wecinv_list_posts_by_date($post_type->name);
+
+                }
+
+            echo '</div>';
+
+        }
+
+    }
+
+}
+
 
 /**
  * Create Metabox on Tracked Post Types
