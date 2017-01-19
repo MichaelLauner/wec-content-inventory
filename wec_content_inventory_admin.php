@@ -1,5 +1,7 @@
 <?php
 
+wp_enqueue_style( 'wecinv-style', plugin_dir_url( __FILE__ ).'/css/wecinv.css' );
+
 wp_register_script('wecinv-scripts', plugin_dir_url( __FILE__ ).'js/wecinv_scripts.js');
 
 wp_enqueue_script('jquery');
@@ -7,7 +9,6 @@ wp_enqueue_script('jquery-ui-tabs');
 wp_enqueue_script('wecinv-scripts', array('jquery', 'jquery-ui-tabs' ), '1.1', true);
 
 
-echo '<h1>'.plugin_dir_url( __FILE__ ).'js/wecinv_scripts.js</h1>';
 
 if($_POST['wecinv_hidden'] == 'Y') {
 
@@ -154,10 +155,6 @@ if($_POST['wecinv_hidden'] == 'Y') {
 <!-- Start Of Tracking Status -->
 
 <?php
-
-echo '<style>';
-    echo '.inventory-table { width:95%; box-sizing:border-box; }';
-echo '</style>';
 
 echo '<h2>Content Inventory</h2>';
 
