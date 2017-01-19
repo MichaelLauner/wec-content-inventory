@@ -461,3 +461,68 @@ function wecinv_list_posts_hierarchically($wecinv_post_type) {
     echo '</table>';
 
 }
+
+/**
+ * Create Table Of Posts In Hierarchical Order
+ */
+function wecinv_metabox() {
+   add_meta_box('wecinv_meta_box', 'WP Content Inventory', 'wecinv_mentox_content', 'page', 'advanced', 'high');
+}
+add_action('admin_menu', 'wecinv_metabox');
+
+// Callback function to show fields in meta box
+function wecinv_mentox_content() {
+    global $post;
+
+    $post_id = $post->ID;
+
+    //Cross Content Data
+    $track_status = get_post_meta( $post->ID, 'content_approval', true );
+
+    echo '<h2>Content Approval Status ';
+    echo '<select name="content_approval" id="content_approval">';
+
+        echo '<option value="Not Approved" ';
+        if ( $track_status == 'Not Approved') { echo 'selected'; }
+        echo '>Not Approved</option>';
+
+        echo '<option value="In Progress" ';
+        if ( $track_status == 'In Progress') { echo 'selected'; }
+        echo '>In Progress</option>';
+
+        echo '<option value="Approved" ';
+        if ( $track_status == 'Approved') { echo 'selected'; }
+        echo '>Approved</option>';
+
+    echo '</select></h2>';
+
+}
+
+// Save data from meta box
+function wecinv_save_status($post_id) {
+    /* in production code, $slug should be set only once in the plugin,
+       preferably as a class property, rather than in each function that needs it.
+     */
+    //$slug = 'post';
+
+    /* check whether anything should be done */
+    //$_POST += array("{$slug}_edit_nonce" => '');
+    //if ( $slug != $_POST['post_type'] ) {
+    //    return;
+    //}
+    if ( !current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+    //if ( !wp_verify_nonce( $_POST["{$slug}_edit_nonce"],
+    //                       plugin_basename( __FILE__ ) ) )
+    //{
+    //    return;
+    //}
+
+    /* Request passes all checks; update the post's metadata */
+    if (isset($_REQUEST['content_approval'])) {
+        update_post_meta($post_id, 'content_approval', $_REQUEST['content_approval']);
+    }
+
+}
+add_action( 'save_post', 'wecinv_save_status');
